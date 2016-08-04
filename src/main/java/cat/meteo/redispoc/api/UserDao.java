@@ -6,9 +6,11 @@
 package cat.meteo.redispoc.api;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -30,20 +32,39 @@ public class UserDao {
         
         for (String key : userKeys) {
             users.add(getUserByRedisId(key));
-            System.out.println(key);
         }
         
         return users;
     }
     
-    public User getUserById(int userId) {
+    public void addUser(User user) throws IllegalArgumentException {
+        
+        if (user == null) {
+            throw new IllegalArgumentException("Trying to add a null user instance to the system");
+        }
+        
+        String redisKey = getRedisKey(user.getId());
+        
+        if (template.hasKey(redisKey)) {
+            throw new IllegalArgumentException("User id already exists");
+        }
+        
+        Map<String, Object> userProperties = new HashMap();
+        userProperties.put("id", user.getId());
+        userProperties.put("name", user.getName());
+        userProperties.put("age", user.getAge());
+        
+        template.opsForHash().putAll(redisKey, userProperties);
+    }
+    
+    public User getUserById(UUID userId) {
         
         String redisKey = getRedisKey(userId);
         return this.getUserByRedisId(redisKey);
     }
     
-    private String getRedisKey(int userId) {
-        return "user:" + Integer.toString(userId);
+    private String getRedisKey(UUID userId) {
+        return "user:" + userId.toString();
     }
     
     private User getUserByRedisId(String redisKey) {
@@ -56,6 +77,6 @@ public class UserDao {
         String name = (String) template.opsForHash().get(redisKey, "name");
         String age = (String) template.opsForHash().get(redisKey, "age");
         
-        return new User(Integer.parseInt(id), name, Integer.parseInt(age));
+        return new User(UUID.fromString(id), name, Integer.parseInt(age));
     }
 }

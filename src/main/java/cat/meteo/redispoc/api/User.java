@@ -5,13 +5,15 @@
  */
 package cat.meteo.redispoc.api;
 
+import java.util.UUID;
+
 /**
  *
  * @author marc
  */
 public class User {
     
-    private int id;
+    private UUID id;
     private String name;
     private int age;
     
@@ -19,17 +21,17 @@ public class User {
         //Default constructor
     }
     
-    public User(int id, String name, int age) {
+    public User(UUID id, String name, int age) {
         this.id = id;
         this.name = name;
         this.age = age;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
