@@ -5,6 +5,7 @@
  */
 package cat.meteo.redispoc.api;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,12 @@ public class MainController {
     @Autowired
     private UserService userService;
 
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
     public User getUser(@PathVariable("id") String userId) {
