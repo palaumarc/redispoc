@@ -40,5 +40,10 @@ public class UserService {
         
         userDao.addUser(newUser);
     }
+    
+    public void deleteUser(String userId) {
+        UUID id = UUID.fromString(userId);
+        userDao.deleteUser(id);
+    }
             
 }

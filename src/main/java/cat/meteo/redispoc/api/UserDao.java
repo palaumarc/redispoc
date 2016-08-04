@@ -57,6 +57,17 @@ public class UserDao {
         template.opsForHash().putAll(redisKey, userProperties);
     }
     
+    public void deleteUser(UUID userId) {
+        
+        String redisKey = this.getRedisKey(userId);
+        
+        if (!template.hasKey(redisKey)) {
+            throw new IllegalArgumentException("User id not found");
+        }
+        
+        template.delete(redisKey);
+    }
+    
     public User getUserById(UUID userId) {
         
         String redisKey = getRedisKey(userId);

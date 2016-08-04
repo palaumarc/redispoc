@@ -40,12 +40,17 @@ public class MainController {
         return userService.getUserById(userId);
     }
     
-    @RequestMapping(method = RequestMethod.POST, value = "/add")
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public HttpStatusMessage addUser(@RequestParam("name") String name, @RequestParam("age") int age) {
-        System.out.println("Name: " + name);
-        System.out.println("Age: " + age);
         userService.addUser(name, age);
         return new HttpStatusMessage(HttpStatus.CREATED.toString(), "", "User " + name + " added correctly");
+    }
+    
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @ResponseBody
+    public HttpStatusMessage addUser(@PathVariable("id") String userId) {
+        userService.deleteUser(userId);
+        return new HttpStatusMessage(HttpStatus.OK.toString(), "", "User " + userId + " deleted correctly");
     }
 }
