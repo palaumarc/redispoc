@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cat.meteo.redispoc</groupId>
+    <artifactId>redisPoC</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <name>redisPoC</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java-version>1.7</java-version>
+        <spring.version>3.2.2.RELEASE</spring.version>
+        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+    </properties>
+    
+    <dependencies>
+        <!-- servlets & jsp -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+   
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.4.4</version>
+        </dependency>
+        
+        <!-- Spring redis support -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>1.0.2.RELEASE</version>
+        </dependency>
+        
+         <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <!-- Exclude Jakarta Commons Logging in favor of SLF4j.
+                Commons Logging es la que fa servir Spring per defecte. 
+                Si volem veure el log d'spring jdbctemplate etc amb logback s'ha de fer aquest canvi -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <!-- Per migrar de Jakarta Commons Logging a Slf4j -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.7.2</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- logger: logback -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.0.9</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.9</version>
+        </dependency>
+        
+        
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version> 
+                <configuration>
+                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+                    <webResources>
+                        
+                        <resource>
+                            <!--
+                            Maven filtrará contenido del directorio 'src/main/resources', concretamente usará el filtro definido 
+                            previamente para rellenar el archivo 'logback.xml', con los valores de las variables del archivo
+                            'config.${targetenv}.properties'.
+                            Una vez filtra el archivo, lo meterá en el directorio especificado como destino: WEB-INF/classes
+                            -->
+                            <directory>${basedir}/src/main/resources</directory>
+                            <filtering>true</filtering>
+                            <includes>
+                                <include>**/logback.xml</include>
+                                <include>**/Global.properties</include>                                
+                            </includes>
+                            <targetPath>WEB-INF/classes</targetPath>
+                        </resource>
+                        
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
