@@ -45,5 +45,16 @@ public class UserService {
         UUID id = UUID.fromString(userId);
         userDao.deleteUser(id);
     }
+
+    void updateUser(String userId, String name, int age) {
+        
+        if (name.isEmpty() || age < 0) {
+            throw new IllegalArgumentException("User name must not be empty and age must be >= 0");
+        }
+        
+        User updatedUser = new User(UUID.fromString(userId), name, age);
+        userDao.updateUser(updatedUser);
+        
+    }
             
 }

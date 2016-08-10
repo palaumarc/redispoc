@@ -57,6 +57,26 @@ public class UserDao {
         template.opsForHash().putAll(redisKey, userProperties);
     }
     
+    public void updateUser(User user) {
+        
+        if (user == null) {
+            throw new IllegalArgumentException("Trying to modify a null user instance");
+        }
+        
+        String redisKey = getRedisKey(user.getId());
+        
+        if (!template.hasKey(redisKey)) {
+            throw new IllegalArgumentException("User id not found");
+        }
+        
+        Map<String, Object> userProperties = new HashMap();
+        userProperties.put("id", user.getId());
+        userProperties.put("name", user.getName());
+        userProperties.put("age", user.getAge());
+        
+        template.opsForHash().putAll(redisKey, userProperties);
+    }
+    
     public void deleteUser(UUID userId) {
         
         String redisKey = this.getRedisKey(userId);

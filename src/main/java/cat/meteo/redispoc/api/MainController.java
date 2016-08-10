@@ -7,6 +7,7 @@ package cat.meteo.redispoc.api;
 
 import cat.meteo.redispoc.commons.exception.HttpStatusMessage;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -42,15 +43,23 @@ public class MainController {
     
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public HttpStatusMessage addUser(@RequestParam("name") String name, @RequestParam("age") int age) {
+    public HttpStatusMessage addUser(@RequestParam String name, @RequestParam int age) {
         userService.addUser(name, age);
         return new HttpStatusMessage(HttpStatus.CREATED.toString(), "", "User " + name + " added correctly");
     }
     
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     @ResponseBody
-    public HttpStatusMessage addUser(@PathVariable("id") String userId) {
+    public HttpStatusMessage deleteUser(@PathVariable("id") String userId) {
         userService.deleteUser(userId);
         return new HttpStatusMessage(HttpStatus.OK.toString(), "", "User " + userId + " deleted correctly");
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/{id}")
+    @ResponseBody
+    public HttpStatusMessage updateUser(@PathVariable("id") String userId, @RequestParam String name, @RequestParam int age) 
+    {
+        userService.updateUser(userId, name, age);
+        return new HttpStatusMessage(HttpStatus.OK.toString(), "", "User " + userId + " updated correctly");
     }
 }
